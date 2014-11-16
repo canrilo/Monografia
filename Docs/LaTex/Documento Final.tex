@@ -1,0 +1,123 @@
+\documentclass[10pt,oneside]{book}
+
+% Margenes
+\usepackage[left=3cm,top=3cm,right=3cm,bottom=3cm]{geometry} %%Márgenes
+
+% Paquetes a usar
+\usepackage[spanish,es-lcroman,activeacute] {babel}   %%para Colocar el Español
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}          % Ecuaciones
+\usepackage{amssymb}          % Símbolos 
+\usepackage{graphicx}         % Graficos
+\usepackage{graphics}         % Subfiguras
+\usepackage{pdfpages}         % incluir PDF
+%\usepackage[tight,footnotesize]{subfigure}
+\usepackage{parskip}
+\usepackage[pdftex, plainpages=false, hypertexnames=false, pdfpagelabels=true,
+    hyperindex=true, linktocpage, pagebackref=true, pdfa=true]{hyperref}         % Vinculos
+\usepackage{color}
+\usepackage{float}					 %Fijar figuras a gusto
+\usepackage{array}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{titlesec} 				%Cambio de estilo de títulos
+\usepackage[titletoc,title]{appendix}
+
+
+% Cambiar nombre de elmentos 
+\renewcommand{\partname}{Parte}
+\renewcommand{\chaptername}{Capítulo}
+\renewcommand{\appendixname}{Apéndice}
+\renewcommand{\bibname}{Referencias}
+\renewcommand{\figurename}{Figura}
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\labelitemi}{$\bullet$}
+\renewcommand{\arraystretch}{1.6}
+
+\setlength{\parskip}{3.1mm plus2mm minus2mm}
+\let\cleardoublepage\clearpage %Quitar paginas en blanco
+\setlength{\parindent}{0pt} % Quitar sangria del inici de parrafo
+
+%Cambio del estilo para los títulos de los chapters
+\titleformat{\chapter}
+  {\normalfont\Huge\bfseries}{\thechapter.}{1em}{}
+
+% Inicio del documento
+\begin{document}
+
+%Eliminar bordes rojos de los hipervinculos
+\hypersetup{pdfborder=0 0 0}
+
+% Porta del documento
+\input{portada.tex}
+
+% Dedicatoria
+\input{dedicatoria.tex}
+
+% Agradecimientos
+\input{agradecimientos.tex}
+
+
+% Colocar numeración romana para tabla de contenido
+\setcounter{page}{1}
+\pagenumbering{roman}
+
+
+%Tabla de contenidos
+\renewcommand{\contentsname}{Tabla de contenido}
+\tableofcontents
+%Tabla de Figuras
+\renewcommand{\listfigurename}{Índice de figuras}
+\listoffigures 
+%Tabla de Tablas
+\renewcommand{\listtablename}{Índice de tablas}
+\listoftables
+
+% Colocar numeración Arabica para el resto del contenido
+\newpage
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+
+% Introducción
+\input{introduccion/introduccion.tex}
+
+%Marcos
+	\input{MarcoTeorico/marcoTeorico.tex}
+
+%Metodología
+\input{Metodologia/metodologia.tex}
+
+%Trabajo realizado
+\input{Trabajo/trabajo.tex}
+
+%Validación de los resultados
+%\input{Validacion/validacion.tex}
+
+%\input{discusion.tex}
+
+\input{conclusiones.tex}
+
+
+%Bibliografia
+\phantomsection % To make hyperref link in TOC work correctly
+\addcontentsline{toc}{chapter}{\bibname} % puts entry
+\nocite{*}
+\bibliographystyle{abbrv}
+\bibliography{references}
+
+%Apéndices
+\appendix
+
+%Cambio de estilo para nombres de los capítulos en Apéndices
+\titleformat{\chapter}[display]% display permite un cambio de línea entre el número y el título
+   {\normalfont\huge\bfseries}{\raggedright\chaptertitlename\ \thechapter}{1em}{\Huge}
+
+%Resumen ejecutivo
+%\input{Ap_ResumenEjecutivo/resumenEjecutivo.tex}
+
+%Datos EDX
+%\input{Ap_DatosEDS/datosEDS.tex}
+
+
+\end{document}

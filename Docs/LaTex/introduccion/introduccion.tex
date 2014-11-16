@@ -1,0 +1,24 @@
+\chapter{Introducción}
+
+El universo, su composición y evolución han sido objeto de estudio para el hombre desde tiempos incluso anteriores a poseer la capacidad para ver más allá del cielo. La innegable inmensidad del universo nos deja sin más remedio que la observación para su caracterización y, siendo lo más rápido del universo, la luz es por excelencia el método a través del cual podemos ahondar en los secretos que esconde.
+
+El creciente desarrollo de la tecnología, la mejora en la sensibilidad de los equipos y la capacidad de computación para el análisis de los datos nos han brindado un mejor panorama de cómo es el universo, tanto local como a gran escala, pero el hecho que finalmente nos mostró la verdad sobre la historia y antigüedad del universo fue el descubrimiento y análisis del fondo de radiación de microondas. No sólo fue el sustento para la teoría del \textit{Big-Bang} sino que también nos mostró como fue el universo en momentos cercanos a su origen, justo después de la recombinación cuando el universo se volvió transparente y la luz pudo finalmente viajar libremente. 
+
+Estos análisis nos permitieron conocer a fondo la composición del universo y caracterizarlo a partir de los que hoy se conocen como los parámetros cosmológicos, pero ¿qué tan diferente sería el universo si variaran dichos parámetros? Lamentablemente contamos con un único universo y el método de la experimentación es inviable pues las condiciones en las que se generó el universo exceden por mucho nuestras capacidades, de manera que la única alternativa para responder esta pregunta yace en las simulaciones computacionales a gran escala. 
+
+La creación de máquinas de muy alto nivel de procesamiento y la paralelización de tareas a lo largo de un gran número de procesadores ($>50$) ha permitido la creación de simulaciones cada vez más grandes en un lapso de tiempo cada vez menor. Las simulaciones de N cuerpos permiten observar la evolución del universo y extraer información de las posibles diferencias en cada uno de los escenarios propuestos. En la actualidad se encuentran en desarrollo diferentes experimentos, entre otros el DESI\cite{desi} y el HETDEX\cite{hetdex}, que pretenden medir y cuantificar los efectos de la energía oscura en el universo, de manera que los resultados de este proyecto podrán contrastarse con los datos arrojados por estos experimentos mostrando la distribución de energía-materia que más se acopla a nuestro universo.
+
+El siguiente documento presenta la planeación, desarrollo y resultados de un trabajo que consistió en la generación de condiciones iniciales para universos con diferentes parámetros cosmológicos, la simulación en paralelo de la evolución de dichos universos y el análisis de los estados finales de cada simulación. Para esto se hizo uso de la paralelización del trabajo en cajas con condiciones periódicas de entre 150Mpc y 500Mpc, un número de partículas entre $128^3$ y $512^3$ y un tiempo de simulación cercano a los 13Gyr. El análisis realizado a cada estado final fue hecho a través del lenguaje C, mientras que la visualización de los datos fue realizada a través de Python. 
+
+En el Capítulo \ref{chap:marco} se explicarán las bases teóricas y los conocimientos pertinentes que fueron requeridos para el desarrollo del proyecto, desde el funcionamiento de una simulación en paralelo, la historia del universo y la descripción de los parámetros cosmológicos. Posteriormente en el Capítulo \ref{chap:metodologia} se explicará brevemente la metodología planteada y usada a través del desarrollo del proyecto, el plan de trabajo y los pasos que se siguieron. Luego, en el Capítulo \ref{chap:trabajo}, se mostrarán los resultados del trabajo realizado, así como los problemas encontrados, los códigos y programas creados y la intercomunicación entre estos.\textcolor{red}{FALTA EL RESTO}.
+
+\section{Objetivos}
+
+\subsection*{General}
+Cuantificar el cambio de la estructura a gran escala del universo ante escenarios con diferentes parámetros cosmológicos.
+\subsection*{Específicos}
+\begin{itemize}
+	\item Obtener una serie de universos simulados ante diferentes valores de parámetros cosmológicos.
+	\item Extraer información acerca de los diferentes universos como la abundancia de halos de materia oscura y las distribuciones de velocidad entre pares de halos.
+	\item Realizar un análisis comparativo entre los diferentes universos simulados
+\end{itemize}
