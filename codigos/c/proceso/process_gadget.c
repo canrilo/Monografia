@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <fftw.h>
 struct io_header_1
 {
   int npart[6];
@@ -47,15 +48,16 @@ int load_snapshot(char *fname, int files);
 int allocate_memory(void);
 int reordering(void);
 void exportar_fof(void);
-void centros(void);
+void centros(char *archivo);
 void cic(int div);
 void add_dens(int x, int y, int z, float peso, int div);
 int sign(int v);
+void escribir_densidades(char nom_dens[], int div);
 /*=================================================================================*/
 
 int main(void){
-	char snapshot[100];
-	char comando[100];
+	char snapshot[100],arch_densidades[100];
+	char comando[100], nombre_gr_final[70];
 	int des,divisiones;
 	char ll[10];
 	char longi[10];
@@ -76,6 +78,9 @@ int main(void){
 			printf("Enter the number of divisions for CIC\n");
 			scanf("%d",&divisiones);
 			cic(divisiones);
+			printf("Enter a name for the file of densities:\n");
+			scanf("%s",arch_densidades);
+			escribir_densidades(arch_densidades,divisiones);
 			break;
 		case 2: 
 			exportar_fof();
@@ -95,7 +100,9 @@ int main(void){
 			strcat(comando,nombrefof);
 			//printf("%s",comando);
 			system(comando);
-			centros();
+			printf("Enter a name for the group halo data file:\n");
+			scanf("%s",nombre_gr_final);
+			centros(nombre_gr_final);
 			break;
 		case 3:
 			printf("Enter a filename\n");
@@ -396,10 +403,10 @@ void datos_halo(int ind){
 
 /*Función que calcula los centros de masa y las velocidades de centro de masa
  * de los halos encontrados*/
-void centros(void){
+void centros(char *archivo){
 	FILE *in, *out;
 	int i, basura;
-	char archivo[20] = "datos_halos.data";
+	//char archivo[20] = "datos_halos.data";
 		
 	/*Se abre el archivo con la lista de grupos*/
 	if(!(in=fopen(nombregrupos,"r"))){
@@ -460,23 +467,23 @@ void cic(int div){
 		printf("Hubo un problema con la asignación de memoria\n");
 		exit(1);
 	}
-	printf("The size of the box is %0.1f\nThe lenght of division is %0.1f\n",header1.BoxSize,l);
+	printf("The size of the box is %0.1f kPc\nThe lenght of division is %0.1f kPc\n",header1.BoxSize,l);
 	for(k=1;k<=NumPart;k++){
 		x=P[k].Pos[0];
 		y=P[k].Pos[1];
 		z=P[k].Pos[2];
-		
+				
 		cx= (int) x/l;
 		cy= (int) y/l;
 		cz= (int) z/l;
 		
-		fx=(x-cx*l)-0.5*l;
-        fy=(y-cy*l)-0.5*l;
-        fz=(z-cz*l)-0.5*l;
+		fx=(x/l-cx)-0.5;
+        fy=(y/l-cy)-0.5;
+        fz=(z/l-cz)-0.5;
         
-        wx=-abs(fx)+1;
-        wy=-abs(fy)+1;
-        wz=-abs(fz)+1;
+        wx=-fabsf(fx)+1;
+        wy=-fabsf(fy)+1;
+        wz=-fabsf(fz)+1;
         
         add_dens(cx,cy,cz,wx*wy*wz,div);
         add_dens(cx+sign(fx),cy,cz,(1-wx)*wy*wz,div);
@@ -485,12 +492,16 @@ void cic(int div){
         add_dens(cx+sign(fx),cy+sign(fy),cz,(1-wx)*(1-wy)*wz,div);
         add_dens(cx+sign(fx),cy,cz+sign(fz),(1-wx)*wy*(1-wz),div);
         add_dens(cx,cy+sign(fy),cz+sign(fz),wx*(1-wy)*(1-wz),div);
-        add_dens(cx+sign(fx),cy+sign(fy),cz+sign(fz),(1-wx)*(1-wy)*(1-wz),div);
-        
-        /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-        /*FALTA LA CONVERSIÓN DE UNIDADES, DIVISIÓN POR VOLUMEN Y CONSIDERACIÓN DE LA MASA DE CADA PART*/
-        /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+        add_dens(cx+sign(fx),cy+sign(fy),cz+sign(fz),(1-wx)*(1-wy)*(1-wz),div);    
+
 	}
+	/*
+	printf("%f\n",pow(l,3));
+	for(k=0;k<pow(div,3);k++){
+		
+		densidades[k]/=pow(l,3);
+		printf("%f\n",densidades[k]);
+	}*/
 	printf("Density field done\n");
 	
 }
@@ -500,11 +511,33 @@ void add_dens(int x, int y, int z, float peso, int div){
 	x=(x+div)%div;
 	y=(y+div)%div;
 	z=(z+div)%div;
-	densidades[x+(int)div*y+(int)pow(div,2)*z]+=peso;
+	densidades[(int)pow(div,2)*x+(int)div*y+z]+=peso*header1.mass[1];
+	
 }
 
 /*Función Signo*/
 int sign(int v)
 {
 	return v > 0 ? 1 : (v < 0 ? -1 : 0);
+}
+/*Función que escribe el archivo con las densidades*/
+void escribir_densidades(char nom_dens[], int div){
+	FILE *Fdens;
+	int ind;
+	float l=header1.BoxSize/div;
+	Fdens=fopen(nom_dens,"w");
+	if(!exp){
+		printf("Hubo problemas abriendo el archivo %s\n",nom_dens);
+	}
+	
+	printf("Writing density file %s\n",nom_dens);
+	printf("The file has a single row of data of length %d^3\n",div);
+	printf("The format is row-mayor order, being z coordinate the fastest changing index\n");
+	printf("The first row is the length of the side of the division in kPc\n");
+	
+	fprintf(Fdens,"%f\n",l);
+	for(ind=0;ind<pow(div,3);ind++){
+		fprintf(Fdens,"%f\n",densidades[ind]);
+	}
+	printf("Density file written\n");
 }
