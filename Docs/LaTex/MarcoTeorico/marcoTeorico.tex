@@ -142,7 +142,19 @@ La primera característica del código de Gadget-2 es la creación de un \textit
 \end{figure}
 \footnotetext{Imagen tomada de \url{http://traumabot.blogspot.com/2013/06/octree-based-point-cloud-stream.html}} 
 
-De esta manera, al tener construido el árbol, sólo resta recorrerlo para calcular las fuerzas efectivas. Así que se inicia por la raíz del árbol o el nodo principal y de acuerdo a las características del nodo, se decide se explorar más allá o no, y en dado caso recorrer las 8 ramificaciones para la contribución de la fuerza efectiva. Finalmente para la efectividad del código y la compatibilidad con el SPH (\textit{Smoothed particle hidrodynamics}) no se realizan expansiones multipolo del momento, se usa el monopolo de momento.
+De esta manera, al tener construido el árbol, sólo resta recorrerlo para calcular las fuerzas efectivas. Así que se inicia por la raíz del árbol o el nodo principal y de acuerdo a las características del nodo, se decide se explorar más allá o no, y en dado caso recorrer las 8 ramificaciones para la contribución de la fuerza efectiva. En el caso de que un nodo esté lo suficientemente lejos, toda la sección del árbol que se encuentra de allí en adelante se considera como la contribución de un único cuerpo. Finalmente para la efectividad del código y la compatibilidad con el SPH (\textit{Smoothed particle hidrodynamics}) no se realizan expansiones multipolo del momento sino que se usa el monopolo de momento. 
+
+\begin{equation}
+\phi(x)=\sum\limits_i m_i\varphi(x-x_i)\xrightarrow{\mathscr{F}}\phi^{short}_{k}+\phi^{long}_{k}
+\label{eq:phifourier}
+\end{equation}
+
+La Ecuación (\ref{eq:phifourier}) muestra el análisis que se debe realizar para el potencial peculiar gravitacional por Gadget-2, pero además de esto, se realiza una descomposición en el espacio de Fourier para discernir entre los efectos lejanos y cercanos. Para la parte real es suficiente realizar un análisis en el espacio real mediante la función de error complementario, como se muestra en la Ecuación (\ref{eq:erfc}), en donde $r_i=min(|\vec{x}-\vec{ri}-nL|)$, ya que la función de error complementario rápidamente suprime cualquier contribución distante. Por otro lado, para las contribuciones lejanas del potencial se vuelve mucho más sencillo realizar un análisis mediante métodos de mallados en espacio de Fourier. Este proceso, en conjunto con el método Tree, se le llama frecuentemente como el \textit{TreePM Method}.
+
+\begin{equation}
+\phi^{short}_k(x)=-G\sum\limits_i\frac{m_i}{r_i}erfc\left(\frac{r_i}{2r_s}\right)
+\label{eq:erfc}
+\end{equation}
 
 
 
