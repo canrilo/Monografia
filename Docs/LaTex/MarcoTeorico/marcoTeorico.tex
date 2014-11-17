@@ -48,6 +48,7 @@ Volviendo al universo primitivo, las fluctuaciones cuánticas generaron cambios 
 
 Estos porcentajes se conocen por mediciones y estimaciones, e incluyéndolos en la Ecuación (\ref{eq:En}), puesto que según las observaciones el universo debería ser plano y $\rho\approx\rho_c$. Al sumar toda la densidad de materia oscura y materia ordinaria, aún faltaría un gran porcentaje de densidad energética para cumplir la condición nombrada arriba, de manera que se plantea la energía oscura para cumplir con esa cuota. Es muy poco lo que se sabe acerca de la energía oscura y son muchas las teorías y vertientes entorno a ella, desde la energía de polarización de vacío hasta un fluido que llena todo el espacio tiempo. Entre las cosas que se pueden afirmar de ésta es que es cerca del $70\%$ del contenido energético del universo y es la responsable de la expansión de este (contrarrestada únicamente por la materia que conforma el otro $30\%$).
 
+
 \subsection{Variables Relevantes y Parametrizaciones} 
 Una vez explicada la historia que conllevó a la evolución del universo, es importante rescatar las parametrizaciones de cada fenómeno nombrado anteriormente, puesto que estas variables son los parámetros de ingreso a las simulaciones que se realizaron. Empezando por la expansión del universo, esta se mide por un factor de escala $a(t)$ que varía con el tiempo, tiene un valor de $1$ en la actualidad y para su definición se dice que si una distancia tiene una longitud $r(t_1)$ en dicho tiempo, entonces en $t_2$ estará definido por,
 
@@ -77,6 +78,31 @@ Pero la constante de Hubble puede cambiar con el avance del tiempo, de manera qu
 \frac{H(t)}{H_0}=\left[\frac{\Omega_m}{a^3}+\Omega_\Lambda+\frac{\Omega_r}{a^4}\right]^{\frac{1}{2}}
 \label{eq:total}
 \end{equation}
+
+
+\subsection{Formación de estructura y halos de materia oscura}
+Para describir el origen de la Ecuación (\ref{eq:total}) y la dinámica del universo en general, se vuelve necesario introducir una serie de variables que puedan llevar cuenta de los cambios existentes en él. Las primeras son conocidas como las coordenadas comóviles, las cuales a diferencia de las coordenadas fijas tienen en cuenta el factor de expansión del universo $a(t)$, de manera que todo vector de posición $\vec{r}$ tiene asociado unas coordenadas comóviles $\vec{x}=\vec{r}/a$. Por otro lado, al describir cualquier magnitud vectorial es necesario introducir un marco de referencia; por ejemplo, en la tierra el marco de referencia estático es el planeta en sí mismo y el movimiento de los objetos es referido respecto al suelo. Pero cuando comenzamos a trabajar en un panorama más amplio, como lo son las grandes secciones del universo, y donde el vacío domina impidiendo dar una referencia clara, es importante introducir lo que se conoce como las velocidades peculiares. Al caracterizar el movimiento y distancia de estrellas y galaxias lejanas, la velocidad peculiar es aquella componente de velocidad que no se explica a través de la Ley de Hubble de la Ecuación (\ref{eq:hub}), y viene siendo la velocidad del marco de reposo local, dada por la Ecuación (\ref{eq:peculiar}).
+
+\begin{equation}
+\vec{u}=\vec{v}-H\vec{r}
+\label{eq:peculiar}
+\end{equation}
+
+Paralelo a esto, se modela la expansión cosmológica como un fluido ideal, sin presión y en expansión. Además, definen las fluctuaciones fraccionales de densidad como se muestra en la Ecuación (\ref{eq:delta}), en donde $\bar{\rho}$ corresponde a la densidad de masa promedio. Finalmente se define el potencial gravitacional a través de la ecuación de Possion para la gravitación Newtoniana, mostrada en la Ecuación (\ref{eq:poisson}).
+
+\begin{equation}
+\delta(\vec{x})=\frac{\rho(\vec{r})}{\bar{\rho}}-1
+\label{eq:delta}
+\end{equation}
+
+
+\begin{equation}
+\nabla^{2}\phi=4\pi G\bar{\rho}a^{2}\delta
+\label{eq:poisson}
+\end{equation}
+
+
+Estas definiciones se realizan para plantear la ecuación de continuidad y la Ecuación 
 
 
 \section{Simulación en Paralelo y Análisis}
