@@ -128,7 +128,7 @@ Cuando una sobredensidad comienza a atrapar material y entra en la zona de creci
 Como se dijo en la Sección \ref{sec:universo}, la materia oscura tiene las mismas propiedades gravitatorias que la materia ordinaria u observable, pero la supera en cantidad por casi 5 veces en todo el universo. Es por esto que para analizar las estructuras a gran escala el universo, la distribución de materia, los grandes halos y la dinámica de la materia en el universo se puede partir del análisis de materia oscura, puesto que se espera que la materia ordinaria esté ubicada en donde existan mayores concentraciones de materia oscura. Si bien no tenemos forma de observar los cambios en el universo si se cambia la distribución de energías, se pueden realizar simulaciones a gran escala de todo el universo variando los parámetros cosmológicos. En la siguiente sección se explicará brevemente las características de los algoritmos utilizados y su modo de funcionamiento.
 
 
-\subsection{Gadget-2 y N-GenIC}
+\subsection{Gadget-2}
 
 Toda simulación de un entorno estará limitada por el recursos computacionales que se tengan, como por ejemplo el tiempo de simulación, la cantidad de procesadores disponibles y la cantidad de memoria que se puede ocupar. De manera que la eficiencia de un código estará dictada por la eficiencia en consumo de dichos recursos; qué tantos recursos consume y qué tan exactos son los resultados obtenidos. Existe una gran variedad de códigos para la simulación de $N$ partículas con diversas ventajas y desventajas entre cada uno, pero la principal diferencia radica en el método de análisis de cada código para realizar aproximaciones a pequeña y gran escala, permitiendo así una cierta tolerancia sin comprometer mayor cantidad de recursos. Gadget-2 es un código creado por Volker Springel y publicado en el 2005\cite{gadget} para realizar grandes simulaciones cosmológicas de $N$ cuerpos. La principal ventaja de este código es la efectividad en el manejo de gran y pequeña escala, pues dentro de un cierto rango, realiza cálculos detallados de la gravedad, pero para mayores distancias realiza un análisis de Fourier que calcula la gravedad efectiva aproximada.
 
@@ -157,3 +157,26 @@ La Ecuación (\ref{eq:phifourier}) muestra el análisis que se debe realizar par
 \end{equation}
 
 Con este método nunca es necesario recorrer todos los nodos del árbol, pues este recorrido se trunca rápidamente para el espectro corto, y el efecto de las partículas distantes se calcula con ayuda del campo de densidades estimado por el método CIC (\textit{Cloud in Cell} explicado en la Sección \ref{sub:CIC}) y la transformada rápida de Fourier (FFT). Así se logra optimizar el uso de recursos, puesto que la información de cada partícula puede ser almacenada en el mismo espacio en el que en algún punto estuvo la información de los 8 nodos de conexión y además se logra optimizar las interacciones lejanas por métodos optimizados de Fourier.
+
+Por último, también es importante hablar del sistema de paralelización de Gadget-2 para la división del problema varios procesadores. Dada la cantidad de partículas e interacciones a tener en cuenta en cada simulación se vuelve imperativo distribuir la gran tarea entre múltiples procesadores, de manera que cada cual se encargue de una parte diferente, pero para esto hay múltiples formas de lograrlo. La forma escogida en Gadget-2 es una arquitectura de código que se pueda correr en cualquier sistema, desde un computador personal, hasta grandes clusters de cientos de procesadores, en donde cada procesador disponible cuenta con su espacio de memoria propio y se encarga de un problema de menor tamaño al original. Esto se logra mediante un código abierto llamado MPI (\textit{Message Passing Interface}) el cual hace uso de las librerías de FFTW y GSL. Una vez escogida la forma de paralelización, aún falta crear un algoritmo que permita dividir el trabajo total en tareas menores, de manera eficiente.
+
+La estrategia usada en este código es la generación de una curva fractal llamada Peano-Hilbert, que permite llenar cualquier dominio con formas simples e iterativas, dependiendo de la cantidad de divisiones que se apliquen. En la Figura \ref{fig:peanoh} se pueden ver dos ejemplos de lo que sería la curva para llenar todo el espacio, tanto en dos dimensiones (\ref{fig:ph2d}) para varias divisiones, como en tres dimensiones (\ref{fig:ph3d}).
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width=0.85\textwidth]{MarcoTeorico/line_2}
+		\caption[Curva Peano-Hilber 2D en 3 órdenes]{Curva Peano-Hilber 2D en 3 órdenes\footnotemark[4]}
+		\label{fig:ph2d}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width=0.55\textwidth]{MarcoTeorico/hilbert3d01}
+		\caption[Curva Peano-Hilber 3D]{Curva Peano-Hilber 3D\footnotemark[5]}
+		\label{fig:ph3d}
+	\end{subfigure}
+	\caption{Ejemplos de Curvas de Peano-Hilbert}
+	\label{fig:peanoh}
+\end{figure}
+\footnotetext[4]{Imagen tomada de \url{http://pc-ua.com.ua/page120.html}}
+\footnotetext[5]{Imagen tomada de \url{http://www.mathcurve.com/fractals/hilbert3d/hilbert3d.shtml}}
