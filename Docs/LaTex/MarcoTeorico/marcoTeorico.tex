@@ -116,6 +116,12 @@ Todas las ecuaciones mostradas anteriormente dan como resultado la ecuación dif
 \label{eq:diff}
 \end{equation}
 
+Cuando una sobredensidad comienza a atrapar material y entra en la zona de crecimiento no lineal, esta zona frena su expansión, hay un punto de retorno y finalmente colapsa. Estas regiones son conocidas como \textit{halos} de materia oscura, y allí es donde la materia ordinaria se combina para generar nuevos cuerpos. Es por eso que toda galaxia está rodeada o inmersa en un halo de materia oscura, lo explica la velocidad de rotación tal que sigue existiendo un estado ligado (si ni hubiera presencia de la materia oscura, la velocidad de rotación sería superior a la velocidad de escape) para las estrellas y sistemas formados. Así que si se modela las regiones de sobredensidad como una región esférica cuya función de densidad cumple con un perfil cuadrado (``sombrero de copa''), se pueden resolver analíticamente las ecuaciones de evolución llegando a que una región esférica dejará de expandirse para colapsar a un punto, si su sobredensidad en un tiempo $z$ está dada por,
+
+\begin{equation}
+\delta_{crit}(z)=\frac{1.686}{D(z)}
+\label{eq:critdens}
+\end{equation}
 
 
 \section{Simulación en Paralelo y Análisis}
@@ -124,6 +130,19 @@ Como se dijo en la Sección \ref{sec:universo}, la materia oscura tiene las mism
 
 \subsection{Gadget-2 y N-GenIC}
 
-Toda simulación de un entorno estará limitada por el recursos computacionales que se tengan, como por ejemplo el tiempo de simulación, la cantidad de procesadores disponibles y la cantidad de memoria que se puede ocupar. De manera que la eficiencia de un código estará dictada por la eficiencia en consumo de dichos recursos; qué tantos recursos consume y qué tan exactos son los resultados obtenidos. Existe una gran variedad de códigos para la simulación de $N$ partículas con diversas ventajas y desventajas entre cada uno, pero la principal diferencia radica en el método de análisis de cada código para realizar aproximaciones a pequeña y gran escala, permitiendo así una cierta tolerancia sin comprometer mayor cantidad de recursos. Gadget-2 es un código creado por Volker Springel y publicado en el 2005\cite{gadget} para realizar grandes simulaciones cosmológicas de $N$ cuerpos. 
+Toda simulación de un entorno estará limitada por el recursos computacionales que se tengan, como por ejemplo el tiempo de simulación, la cantidad de procesadores disponibles y la cantidad de memoria que se puede ocupar. De manera que la eficiencia de un código estará dictada por la eficiencia en consumo de dichos recursos; qué tantos recursos consume y qué tan exactos son los resultados obtenidos. Existe una gran variedad de códigos para la simulación de $N$ partículas con diversas ventajas y desventajas entre cada uno, pero la principal diferencia radica en el método de análisis de cada código para realizar aproximaciones a pequeña y gran escala, permitiendo así una cierta tolerancia sin comprometer mayor cantidad de recursos. Gadget-2 es un código creado por Volker Springel y publicado en el 2005\cite{gadget} para realizar grandes simulaciones cosmológicas de $N$ cuerpos. La principal ventaja de este código es la efectividad en el manejo de gran y pequeña escala, pues dentro de un cierto rango, realiza cálculos detallados de la gravedad, pero para mayores distancias realiza un análisis de Fourier que calcula la gravedad efectiva aproximada.
+
+La primera característica del código de Gadget-2 es la creación de un \textit{octree} BH para el análisis de las partículas, lo cual significa que se crea un árbol de análisis en el cual cada nodo puede tener 8 hojas o ramificaciones. Este algoritmo permite que la fuerza gravitacional computacional calculada para cada partícula sea realizada por $\mathcal{O}(\log N)$ interacciones, contrario a los algoritmos de suma directa los cuales necesitan $\mathcal{O}(n^{2})$ interacciones. Para la generación del \textit{octree} se parte del cubo inicial, el cual se divide en 8 octantes iguales y luego se decide si cada subdivisión debe partirse nuevamente en 8 partes hasta que cada partición realizada (hoja del árbol) tiene 1 o 0 partículas en ella, comos se puede observar en la Figura \ref{fig:octree}. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{MarcoTeorico/octree_encode}
+	\caption[División del espacio con octree]{División del espacio con octree \footnotemark}
+	\label{fig:octree}
+\end{figure}
+\footnotetext{Imagen tomada de \url{http://traumabot.blogspot.com/2013/06/octree-based-point-cloud-stream.html}} 
+
+De esta manera, al tener construido el árbol, sólo resta recorrerlo para calcular las fuerzas efectivas. Así que se inicia por la raíz del árbol o el nodo principal y de acuerdo a las características del nodo, se decide se explorar más allá o no, y en dado caso recorrer las 8 ramificaciones para la contribución de la fuerza efectiva. Finalmente para la efectividad del código y la compatibilidad con el SPH (\textit{Smoothed particle hidrodynamics}) no se realizan expansiones multipolo del momento, se usa el monopolo de momento.
+
 
 
