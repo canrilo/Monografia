@@ -156,5 +156,4 @@ La Ecuación (\ref{eq:phifourier}) muestra el análisis que se debe realizar par
 \label{eq:erfc}
 \end{equation}
 
-
-
+Con este método nunca es necesario recorrer todos los nodos del árbol, pues este recorrido se trunca rápidamente para el espectro corto, y el efecto de las partículas distantes se calcula con ayuda del campo de densidades estimado por el método CIC (\textit{Cloud in Cell} explicado en la Sección \ref{sub:CIC}) y la transformada rápida de Fourier (FFT). Así se logra optimizar el uso de recursos, puesto que la información de cada partícula puede ser almacenada en el mismo espacio en el que en algún punto estuvo la información de los 8 nodos de conexión y además se logra optimizar las interacciones lejanas por métodos optimizados de Fourier.
