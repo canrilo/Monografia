@@ -102,7 +102,20 @@ Paralelo a esto, se modela la expansión cosmológica como un fluido ideal, sin 
 \end{equation}
 
 
-Estas definiciones se realizan para plantear la ecuación de continuidad y la Ecuación 
+Estas definiciones se realizan para plantear la ecuación de continuidad y la Ecuación de Euler que permiten describir el fluido así:
+
+\begin{align}
+\frac{\partial\delta}{\partial t}+\frac{1}{a}\nabla\cdot[(1+\delta)\vec{u}]&=0 \\
+\frac{\partial\vec{u}}{\partial t}+H\vec{u}+\frac{1}{a}(\vec{u}\cdot\nabla)\vec{u}&=-\frac{1}{a}\nabla\phi
+\end{align}
+
+Todas las ecuaciones mostradas anteriormente dan como resultado la ecuación diferencial mostrada en (\ref{eq:diff}). Hay que tener en cuenta que el comportamiento del fluido estará bien definido para la evolución de partículas de materia oscura sin colisión siempre y cuando no se crucen. Pero los cruces se darán una vez crezcan las perturbaciones y la relación sea no linear con $|\delta|>1$. La Ecuación (\ref{eq:diff}) Tiene dos soluciones, de las cuales sólo una es creciente, y es proporcional a $D(t)$, el cual es llamado el factor lineal de crecimiento \cite{knobel}. En épocas tempranas del universo cuando dominaba la materia ($1<z<10^{3}$) tenemos un factor de crecimiento tal que $D(t) \propto t^{\frac{2}{3}}\propto a(t)$, pero a medida que avanzamos, los crecimientos son cada vez más lentos, al punto que después de la época inflacionaria, cuando el universo es dominado por la Constate de Hubble, todas las fluctuaciones en el campo de densidades quedan congeladas. Lo que esto quiere decir es que por más que existan lugares en el universo en el que se generan condiciones cerradas que colapsan en sí mismas, i.e. galaxias, el potencial gravitacional permanece intacto en magnitud, y por ello las fluctuaciones que observamos en el potencial gravitacional que observamos hoy en día son del mismo orden de magnitud que las que se observan en el CMB.
+
+\begin{equation}
+\frac{\partial^{2}\delta}{\partial t^{2}}+2H\frac{\partial\delta}{\partial t}=4\pi G\bar{\rho}\delta
+\label{eq:diff}
+\end{equation}
+
 
 
 \section{Simulación en Paralelo y Análisis}
