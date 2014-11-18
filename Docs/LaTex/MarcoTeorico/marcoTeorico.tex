@@ -129,6 +129,7 @@ Como se dijo en la Sección \ref{sec:universo}, la materia oscura tiene las mism
 
 
 \subsection{Gadget-2}
+\label{sub:gadget}
 
 Toda simulación de un entorno estará limitada por el recursos computacionales que se tengan, como por ejemplo el tiempo de simulación, la cantidad de procesadores disponibles y la cantidad de memoria que se puede ocupar. De manera que la eficiencia de un código estará dictada por la eficiencia en consumo de dichos recursos; qué tantos recursos consume y qué tan exactos son los resultados obtenidos. Existe una gran variedad de códigos para la simulación de $N$ partículas con diversas ventajas y desventajas entre cada uno, pero la principal diferencia radica en el método de análisis de cada código para realizar aproximaciones a pequeña y gran escala, permitiendo así una cierta tolerancia sin comprometer mayor cantidad de recursos. Gadget-2 es un código creado por Volker Springel y publicado en el 2005\cite{gadget} para realizar grandes simulaciones cosmológicas de $N$ cuerpos. La principal ventaja de este código es la efectividad en el manejo de gran y pequeña escala, pues dentro de un cierto rango, realiza cálculos detallados de la gravedad, pero para mayores distancias realiza un análisis de Fourier que calcula la gravedad efectiva aproximada.
 

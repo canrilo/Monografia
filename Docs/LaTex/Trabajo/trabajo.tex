@@ -1,13 +1,28 @@
 \chapter{Trabajo Realizado}
 \label{chap:trabajo}
 
-
 \section{Características de Simulación}
+El trabajo realizado a lo largo del semestre se puede dividir en dos secciones principales: la realización de simulaciones y la escritura de códigos de análisis y comparación para dichas simulaciones. Para el primer caso implica la lectura de cómo correr las simulaciones en clusters de múltiples procesadores, definir los parámetros de instalación y de simulación en sí y observar los comportamientos, tiempos de duración y modos de exportación de datos de cada simulación. Para la segunda sección se incluyen los códigos realizados y utilizados que permiten desde la lectura de los datos brutos de simulación hasta la extracción de propiedades y generación de gráficas de análisis. A continuación se explicarán las diferentes secciones y detalles del trabajo realizado, así como los resultados de dicho trabajo.
+
+\subsection{Parámetros de instalación y compilación}
+Para correr una simulación en Gadget-2 se requiere principalmente de 3 librerías previamente instaladas y de un set de condiciones iniciales sobre las cuales trabajar. Las tres librerías que se deben instalar son FFTW, GSL y MPI, todas ellas de libre distribución e instalación. FFTW es una librería, o conjunto de librerías, con códigos para la realización de transformadas de Fourier en espacio discreto, como la transformada rápida de Fourier (FFT), cuyo uso se explicó en la Sección \ref{sub:gadget}. GSL (\textit{GNU Scientific Library}) como su nombre lo dice es una librería con un gran conjunto de funciones de uso científico. Finalmente, MPI (\textit{Message Passing Interface}) es la librería de instrucciones, rutinas y métodos para la paralelización de procesos en múltiples procesadores. 
+
+Como se explicará más a fondo en la Sección \ref{sub:simulaciones}, las simulaciones fueron realizadas no sólo en computadores personales sino que también se hizo uso del clúster de física de la Universidad de los Andes y además del clúster KIAS en Corea 
+\subsection{Parámetros de la simulación}
+
+\subsection{Simulaciones realizadas}
+\label{sub:simulaciones}
 
 
 \section{Códigos de Análisis}
 
-\subsection{Cloud in Cell CIC}
+\subsection{Estructura del \textit{Snapshot}}
+
+\subsection{Extracción de Halos}
+
+
+
+\subsection{Campo de densidades (CIC)}
 \label{sub:CIC}
 
 \section{Análisis y Resultados}
