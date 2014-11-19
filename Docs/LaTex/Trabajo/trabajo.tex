@@ -89,9 +89,11 @@ Una vez terminado de correr el FoF, éste exporta un nuevo archivo que contiene 
 Dado que la idea del proyecto es observar cambios en los universos simulados, fue necesario encontrar halos correspondientes entre las simulaciones. Esto es posible ya que en el archivo de parámetros de la generación de condiciones iniciales, uno de los parámetros corresponde a una semilla de generación de números aleatorios y al dejar esta semilla invariante, los universos tendrán estructuras y comportamientos similares. Para la búsqueda de estos halos correspondientes, se realiza un recorrido a través de los halos de la simulación de referencia (aquella con los valores de Plank) y para cada halo se busca dónde están las partículas correspondientes en las demás simulaciones, finalmente se selecciona aquel con mayor número de coincidencias, claro está, siempre y cuando sea un valor razonable. 
 
 
-\subsection{Campo de densidades (CIC)}
+\subsection{Campo de densidades}
 \label{sub:CIC}
-El cálculo del campo de densidades de la simulación y la sobredensidad en cada punto es la segunda vertiente del código, pero que para los efectos finales del proyecto complementa los datos de la primera vertiente. 
+El cálculo del campo de densidades de la simulación y la sobredensidad en cada punto es la segunda vertiente del código, pero que para los efectos finales del proyecto complementa los datos de la primera vertiente. Para el cálculo de las densidades se utiliza el algoritmo conocido como \textit{Cloud in Cell}, el cual, en vez de realizar un conteo bruto de la cantidad de masas presentes en cada división, realiza una ponderación de acuerdo a la posición relativa al centro de las celdas. 
+
+El primer paso es dividir la caja en un cierto número de celdas, que serán la resolución del análisis a realizar. Luego para cada una de las partículas se calcula la ubicación en la grilla construida. A partir de su posición se calcula la posición relativa al centro de dicha celda, esto se realiza creando una función para cada eje en donde si está en el centro de dicho eje, la función vale cero. Luego se calcula el porcentaje que le corresponde a la celda actual y a las celdas adyacentes, tal que si está en el centro de cierto eje, el peso en dicho eje es $1$, mientras que si está en la unión de dos celdas, el peso en dicho eje es $0.5$. Finalmente se asigna el porcentaje correspondiente a cada una de las celdas adyacentes, evitando revisar todas las posibilidades se hace uso de la función signo para saber en qué dirección moverse en cada eje. 
 
 
 \section{Análisis y Resultados}
