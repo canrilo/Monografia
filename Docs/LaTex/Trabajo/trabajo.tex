@@ -7,8 +7,33 @@ El trabajo realizado a lo largo del semestre se puede dividir en dos secciones p
 \subsection{Parámetros de instalación y compilación}
 Para correr una simulación en Gadget-2 se requiere principalmente de 3 librerías previamente instaladas y de un set de condiciones iniciales sobre las cuales trabajar. Las tres librerías que se deben instalar son FFTW, GSL y MPI, todas ellas de libre distribución e instalación. FFTW es una librería, o conjunto de librerías, con códigos para la realización de transformadas de Fourier en espacio discreto, como la transformada rápida de Fourier (FFT), cuyo uso se explicó en la Sección \ref{sub:gadget}. GSL (\textit{GNU Scientific Library}) como su nombre lo dice es una librería con un gran conjunto de funciones de uso científico. Finalmente, MPI (\textit{Message Passing Interface}) es la librería de instrucciones, rutinas y métodos para la paralelización de procesos en múltiples procesadores. 
 
-Como se explicará más a fondo en la Sección \ref{sub:simulaciones}, las simulaciones fueron realizadas no sólo en computadores personales sino que también se hizo uso del clúster de física de la Universidad de los Andes y además del clúster KIAS en Corea 
+Una vez instaladas las librerías se procede a compilar los ejecutables, para lo cual es necesario configurar el MakeFile. En éste se comentan las características y utilidades que no se requieren usar de Gadget-2, así como se activan las que sí. Para el caso del proyecto, los puntos más importantes del MakeFile son activar las condiciones de frontera periódicas, activar el mallado PM (para el algoritmo TreePM explicado en la Sección \ref{sub:gadget}), el uso de Peano-Hilbert para la paralelización y desactivar el uso de librería HDF5, la cual no fue instalada. Finalmente, se indica las ubicaciones de las librerías previamente instaladas, lo cual cambia dependiendo de la arquitectura del sistema y se procede a compilar para generar el ejecutable de la simulación. Este proceso es idéntico para Gadget-2 y para N-GenIC, que es el código utilizado para el tercer requerimiento: las condiciones iniciales. N-GenIC es un código de generación de condiciones iniciales que a partir de un archivo \textit{glass} de partículas homogéneamente distribuidas en un mallado genera un archivo del tipo snapshot de Gadget-2 con una distribución de masas y velocidades homogénea. El archivo \textit{glass} utilizado tenía un total de $16^3$ partículas de manera que de acuerdo a los requerimientos de la simulación (número total de partículas) se puede apilar una cierta cantidad de archivos en cada eje, o crear uno de mayor tamaño.
+
+Como se explicará más a fondo en la Sección \ref{sub:simulaciones}, las simulaciones fueron realizadas no sólo en computadores personales sino que también se hizo uso del clúster de física de la Universidad de los Andes y además se corrieron las simulaciones definiticas en el clúster KIAS en Corea, para lo cual fue necesario la conexión y ejecución de comandos remotos mediante la terminal de Ubuntu. Mediante el comando \textit{ssh}, con un usuario y una clave, se establece una conexión remota con el clúster o máquina en cuestión que permite correr cualquier comando o script. En el caso de la ejecución de las simulaciones es importante tener en cuenta la arquitectura y manejo que tenga cada clúster, puesto que en un clúster de bajo uso como lo era el Fiscluster se podía ejecutar directamente el script de la simulación en los nodos que estuviesen desocupados, siempre y cuando los resultados de simulación quedasen dentro de las limitaciones de espacio de disco duro y computación. En cambio, para un cluster de mayor nivel de organización e infraestructura como lo es KIAS, hay que cumplir con una serie de recursos máximos permitidos y además el script no puede ser ejecutado directamente, sino que debe contener la información de la cantidad de nodos y procesadores requeridos y correr el comando \textit{qsub} con el scrip. Este comando añade el script a un sistema de colas, para el cual el administrador de colas, en base a los requerimientos descritos para el script, asigna los procesadores en los que correrá el proceso. Esta organización permite una mejor distribución de los recursos, evitando la sobrecarga de algún nodo. El estado del proceso puede ser seguido mediante el comando \textit{qstat} el cual muestra los procesos corriendo por el usuario actual y con el comando \textit{qhost} que muestra el estado actual de uso de los recursos del clúster, como la carga de los nodos y la memoria usada. 
+
 \subsection{Parámetros de la simulación}
+Una vez se tiene listo el ejecutable, se prepara el script para la ejecución de la simulación, mediante el comando \textit{mpirun} o \textit{mpiexec} los cuales deben recibir como entrada el número de procesadores en los que se va a correr la simulación, un archivo con la lista específica de los nodos a usar, el ejecutable y cualquier entrada que requiera dicho ejecutable. Tanto para el caso de N-GenIC como para Gadget-2 se requiere un archivo de parámetros en el cual se especifican las condiciones de simulación, la ubicación de datos de entrada y datos de salida y los parámetros cosmológicos, entre otros. 
+
+Los datos más importantes para tener en cuenta con el archivo de parámetros de N-GenIC son: los parámetros cosmológicos $\Omega$, $\Omega_\Lambda$, $\Omega_b$, $H$, $\sigma_8$; el \textit{redshift} inicial de la simulación, $z$; el tamaño de la caja, en kiloparsecs; el \textit{TileFac}, que corresponde al número de veces que se replica el archivo \textit{glass} en cada dirección (\textit{i.e.} número de partículas); y los parámetros de escritura y lectura, como carpetas y bases para nombres de exportación. El parámetro cosmológico $\sigma_8$ es el cual determina cómo son las fluctuaciones de densidad en el universo, debido a que da cuenta de qué tan dispersas o desviadas son dichas fluctuaciones en esferas de $8Mpc$, de manera que como se puede observar en la Figura \ref{fig:sigma}, en una simulación con un $\sigma_8$ mayor, habrá un mayor contraste (serán más pronunciadas las fluctuaciones) de densidades. 
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.49\textwidth}
+		\includegraphics[width=\textwidth]{Trabajo/res1}
+		\caption{$\sigma_8=0.9$}
+		\label{fig:sig9}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.49\textwidth}
+		\includegraphics[width=\textwidth]{Trabajo/res2}
+		\caption{$\sigma_8=0.7$}
+		\label{fig:sig7}
+	\end{subfigure}
+	\caption{Dos simulaciones de $128^3$ partículas con iguales condiciones a excepción de $\sigma_8$. También se aprecian las condiciones periódicas de la simulación.}
+	\label{fig:sigma}
+\end{figure}
+
+En cuanto al archivo de parámetros de Gadget-2 es un poco más extenso, pero la esencia se conserva, comenzando porque se deben volver a incluir los parámetros cosmológicos y el tamaño de la caja, para lo cual no sobra recordar que dichos valores deben coincidir con los utilizados en el archivo de parámetros de las condiciones iniciales. Nuevamente se deben especificar detalles acerca de la importación de condiciones iniciales (resultados de N-GenIC) y exportación de estados parciales, resultados y archivos de reinicio para cada procesador. Gadget exporta los resultados parciales y totales en archivos de estados donde se tienen todos los datos de la simulación actual en un punto dado; este archivo se explica más a fondo en la Sección \ref{sub:snap}. En el archivo de parámetros se deben incluir nuevamente los tiempos 
+
 
 \subsection{Simulaciones realizadas}
 \label{sub:simulaciones}
@@ -17,6 +42,7 @@ Como se explicará más a fondo en la Sección \ref{sub:simulaciones}, las simul
 \section{Códigos de Análisis}
 
 \subsection{Estructura del \textit{Snapshot}}
+\label{sub:snap}
 
 \subsection{Extracción de Halos}
 
