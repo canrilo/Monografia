@@ -11,6 +11,8 @@ Una vez instaladas las librerías se procede a compilar los ejecutables, para lo
 
 Como se explicará más a fondo en la Sección \ref{sub:simulaciones}, las simulaciones fueron realizadas no sólo en computadores personales sino que también se hizo uso del clúster de física de la Universidad de los Andes y además se corrieron las simulaciones definiticas en el clúster KIAS en Corea, para lo cual fue necesario la conexión y ejecución de comandos remotos mediante la terminal de Ubuntu. Mediante el comando \textit{ssh}, con un usuario y una clave, se establece una conexión remota con el clúster o máquina en cuestión que permite correr cualquier comando o script. En el caso de la ejecución de las simulaciones es importante tener en cuenta la arquitectura y manejo que tenga cada clúster, puesto que en un clúster de bajo uso como lo era el Fiscluster se podía ejecutar directamente el script de la simulación en los nodos que estuviesen desocupados, siempre y cuando los resultados de simulación quedasen dentro de las limitaciones de espacio de disco duro y computación. En cambio, para un cluster de mayor nivel de organización e infraestructura como lo es KIAS, hay que cumplir con una serie de recursos máximos permitidos y además el script no puede ser ejecutado directamente, sino que debe contener la información de la cantidad de nodos y procesadores requeridos y correr el comando \textit{qsub} con el scrip. Este comando añade el script a un sistema de colas, para el cual el administrador de colas, en base a los requerimientos descritos para el script, asigna los procesadores en los que correrá el proceso. Esta organización permite una mejor distribución de los recursos, evitando la sobrecarga de algún nodo. El estado del proceso puede ser seguido mediante el comando \textit{qstat} el cual muestra los procesos corriendo por el usuario actual y con el comando \textit{qhost} que muestra el estado actual de uso de los recursos del clúster, como la carga de los nodos y la memoria usada. 
 
+Dado que en el clúster no se hacía uso de las colas de trabajo y los scripts se corrían directamente desde la consola, en el caso de haber una desconexión del computador y romper el acceso remoto, las simulaciones se detenían. Para corregir este problema se hizo uso del comando \textit{nohup} el cual permitía que el código se siguiese ejecutando sin necesidad de la conexión permanente por consola, así todos los outputs que normalmente aparecerían en la consola se guardaban en un archivo de texto.
+
 \subsection{Parámetros de la simulación}
 Una vez se tiene listo el ejecutable, se prepara el script para la ejecución de la simulación, mediante el comando \textit{mpirun} o \textit{mpiexec} los cuales deben recibir como entrada el número de procesadores en los que se va a correr la simulación, un archivo con la lista específica de los nodos a usar, el ejecutable y cualquier entrada que requiera dicho ejecutable. Tanto para el caso de N-GenIC como para Gadget-2 se requiere un archivo de parámetros en el cual se especifican las condiciones de simulación, la ubicación de datos de entrada y datos de salida y los parámetros cosmológicos, entre otros. 
 
@@ -32,12 +34,39 @@ Los datos más importantes para tener en cuenta con el archivo de parámetros de
 	\label{fig:sigma}
 \end{figure}
 
-En cuanto al archivo de parámetros de Gadget-2 es un poco más extenso, pero la esencia se conserva, comenzando porque se deben volver a incluir los parámetros cosmológicos y el tamaño de la caja, para lo cual no sobra recordar que dichos valores deben coincidir con los utilizados en el archivo de parámetros de las condiciones iniciales. Nuevamente se deben especificar detalles acerca de la importación de condiciones iniciales (resultados de N-GenIC) y exportación de estados parciales, resultados y archivos de reinicio para cada procesador. Gadget exporta los resultados parciales y totales en archivos de estados donde se tienen todos los datos de la simulación actual en un punto dado; este archivo se explica más a fondo en la Sección \ref{sub:snap}. En el archivo de parámetros se deben incluir nuevamente los tiempos 
-
+En cuanto al archivo de parámetros de Gadget-2 es un poco más extenso, pero la esencia se conserva, comenzando porque se deben volver a incluir los parámetros cosmológicos y el tamaño de la caja, para lo cual no sobra recordar que dichos valores deben coincidir con los utilizados en el archivo de parámetros de las condiciones iniciales. Nuevamente se deben especificar detalles acerca de la importación de condiciones iniciales (resultados de N-GenIC) y exportación de estados parciales, resultados y archivos de reinicio para cada procesador. Gadget exporta los resultados parciales y totales en archivos de estados donde se tienen todos los datos de la simulación actual en un punto dado; este archivo se explica más a fondo en la Sección \ref{sub:snap}. En el archivo de parámetros se deben incluir nuevamente los tiempos de inicio de la simulación, pero esta vez en términos del parámetro de dilatación $a=\frac{1}{1+z}$ y además el tiempo del primer snapshot y el intervalo de tiempo de cada cuando debe exportarse un snapshot (ya sea por un factor aditivo o multiplicativo). Entre otros parámetros para modificar se encuentran el tiempo máximo de simulación, los errores y tolerancias de los métodos de Tree BH y SPH. Finalmente se tienen las distancias de \textit{softening}, para las que se aconseja usar un décimo del equivalente a la distancia media libre.
 
 \subsection{Simulaciones realizadas}
 \label{sub:simulaciones}
+A lo largo del desarrollo del proyecto se corrieron múltiples simulaciones con diferentes características y propósitos, desde las simulaciones de prueba, las cuales permitían observar si el código corría correctamente, hasta las simulaciones definitivas en donde lo más importante eran las variables de entrada. Inicialmente, para la familiarización con el entorno de ejecución y con los modos de ejecución, se corrieron simulaciones de prueba en un computador portátil, lo cual daba para un máximo de dos procesadores. Una vez comprobado que el método de compilación y ejecución de Gadget-2 y N-GenIC era el correcto se procedió a instalar nuevamente las librerías en el clúster del Departamento de Física de la Universidad de los Andes, \textit{fiscluster}. Una vez listas, se corrieron las primeras simulaciones para $128^3$ partículas, cuyos resultados corresponden a la Figura \ref{fig:sigma}. Estas primeras simulaciones fueron realizadas en una caja periódica de tamaño de $150Mpc$ y tomaron aproximadamente 3 horas de cómputo en 32 procesadores. Para estas primeras simulaciones, cada snapshot exportado por Gadget-2 pesaba alrededor de $57Mb$. En la Figura \ref{fig:escala} se puede apreciar una escala del tamaño de la caja en las simulaciones definitivas respecto a las simulaciones de prueba.
 
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\textwidth]{Trabajo/escala}
+	\caption{Comparación de tamaños entre simulaciones de prueba y simulaciones definitivas}
+	\label{fig:escala}
+\end{figure}
+
+El siguiente paso a seguir fue realizar simulaciones de $256^3$ partículas en una caja periódica de $500Mpc$ de lado, pero esta vez variando el parámetro de $\Omega$ de $0.3$ a $0.35$. El tiempo de simulación tomado para estas simulaciones fue de aproximadamente 24 horas corriendo en 40 procesadores. Debido a la gran cantidad de partículas en la lista, cada snapshot generado para este segundo grupo de simulaciones pesó $449Mb$. Para el grupo definitivo de simulaciones realizadas se tomó nuevamente la caja de $500Mpc$, pero nuevamente se aumentó el número de partículas en un factor de 8, dando así un total de $512^3$ partículas; $64$ veces más que en las simulaciones de prueba. El tamaño final de cada snapshot generado para esta cantidad de partículas fue de $3.6Gb$. Para este último grupo de simulaciones hubo una limitación de memoria física para correr la simulación, incluso corriendo en el máximo de 56 procesadores en fiscluster, no fue posible completar las simulaciones. Fue por esta razón que se decidió migrar la simulación al clúster KIAS en Corea, con una capacidad de 256 procesadores. 
+
+El migrar de clúster implicó reinstalar las librerías necesarias para la simulación y también correr nuevamente simulaciones pequeñas para entender el modo de funcionamiento de los trabajos. Este clúster funciona con un sistema de colas de trabajos, de manera que los scripts ser presentados a un administrador de colas quien se encarga de ejecutarlos. Una vez en proceso, se crean dos archivos con radical igual al script, en donde se puede realizar el seguimiento del output de la ejecución (para el primero) y los posibles errores (en el segundo). El cambio de clúster supuso una notoria mejoría en los tiempos de ejecución, puesto que para la creación de las condiciones iniciales se debían realizar en un único procesador, pues Gadget-2 tiende a tener errores al leer un archivo de condiciones iniciales dividido. Así, en fiscluster la creación de estos archivos tomaba alrededor de 20 minutos o más, mientras que en KIAS dicho proceso tomó 5 minutos. Las simulaciones definitivas tomaron aproximadamente 4 días en total, y los parámetros usados para dichas simulaciones se muestran en la Tabla \ref{tab:param} y son datos tomados del proyecto Plank.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{cc}
+		\hline \hline
+		\textbf{Parámetro} & \textbf{Valor} 		\\
+		\hline
+		$\Omega_0$ 			& $0.3175\pm0.05$ 	\\
+		$\Omega_\Lambda$ 	& $0.6825 \mp 0.05$	\\
+		$\Omega_b$ 			& $0.048$			\\
+		$H$					& $0.6711$			\\
+		$\sigma_8$			& $0.834$			\\
+		\hline
+	\end{tabular}
+	\caption{Parámetros de simulaciones definitivas}
+	\label{tab:param}
+\end{table}
 
 \section{Códigos de Análisis}
 
