@@ -1,4 +1,5 @@
-#define _FILE_OFFSET_BITS 64
+//#define _FILE_OFFSET_BITS 64
+//#include <features.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -67,6 +68,7 @@ int main(void){
 	printf("Please give the name of the snapshot to be used\n");
 	scanf("%s",snapshot);
 	load_snapshot(snapshot,1);
+	reordering();
 	printf("The number of particles is %d\n",NumPart);
 	printf("The mass is %f\n",header1.mass[1]);
 	printf("The size of the box is %.1f\n",header1.BoxSize);
@@ -144,11 +146,11 @@ int load_snapshot(char *fname, int files)
 
       printf("reading `%s' ...\n", buf);
       fflush(stdout);
-
-      fread(&dummy, sizeof(dummy), 1, fd);
+	
+	  fread(&dummy, sizeof(dummy), 1, fd);
       fread(&header1, sizeof(header1), 1, fd);
       fread(&dummy, sizeof(dummy), 1, fd);
-
+		
       if(files == 1)
 		{
 		  for(k = 0, NumPart = 0, ntot_withmasses = 0; k < 6; k++)
@@ -176,12 +178,14 @@ int load_snapshot(char *fname, int files)
 	{
 	  for(n = 0; n < header1.npart[k]; n++)
 	    {
+			//printf("%d\n",n);
 	      fread(&P[pc_new].Pos[0], sizeof(float), 3, fd);
 	      pc_new++;
 	    }
 	}
+		
       SKIP;
-
+		
       SKIP;
       for(k = 0, pc_new = pc; k < 6; k++)
 	{
@@ -527,7 +531,7 @@ void escribir_densidades(char nom_dens[], int div){
 	int ind;
 	float l=header1.BoxSize/div;
 	Fdens=fopen(nom_dens,"w");
-	if(!exp){
+	if(!Fdens){
 		printf("Hubo problemas abriendo el archivo %s\n",nom_dens);
 	}
 	
