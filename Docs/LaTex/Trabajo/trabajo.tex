@@ -1,8 +1,9 @@
 \chapter{Trabajo Realizado}
 \label{chap:trabajo}
+El trabajo realizado a lo largo del semestre se puede dividir en dos secciones principales: la realización de simulaciones y la escritura de códigos de análisis y comparación para dichas simulaciones. Para el primer caso implica la lectura de cómo correr las simulaciones en clusters de múltiples procesadores, definir los parámetros de instalación y de simulación en sí y observar los comportamientos, tiempos de duración y modos de exportación de datos de cada simulación. Para la segunda sección se incluyen los códigos realizados y utilizados que permiten desde la lectura de los datos brutos de simulación hasta la extracción de propiedades y generación de gráficas de análisis. A continuación se explicarán las diferentes secciones y detalles del trabajo realizado, así como los resultados de dicho trabajo.
 
 \section{Características de Simulación}
-El trabajo realizado a lo largo del semestre se puede dividir en dos secciones principales: la realización de simulaciones y la escritura de códigos de análisis y comparación para dichas simulaciones. Para el primer caso implica la lectura de cómo correr las simulaciones en clusters de múltiples procesadores, definir los parámetros de instalación y de simulación en sí y observar los comportamientos, tiempos de duración y modos de exportación de datos de cada simulación. Para la segunda sección se incluyen los códigos realizados y utilizados que permiten desde la lectura de los datos brutos de simulación hasta la extracción de propiedades y generación de gráficas de análisis. A continuación se explicarán las diferentes secciones y detalles del trabajo realizado, así como los resultados de dicho trabajo.
+Los datos manejados a lo largo del proyecto son $100\%$ provenientes de simulaciones computacionales, de manera que la correcta planeación, manejo y ejecición de dichas simulaciones es vital para los resultados. A continuación se describen las características de la instalación y ejecución de las simulaciones realizadas.
 
 \subsection{Parámetros de instalación y compilación}
 Para correr una simulación en Gadget-2 se requiere principalmente de 3 librerías previamente instaladas y de un set de condiciones iniciales sobre las cuales trabajar. Las tres librerías que se deben instalar son FFTW, GSL y MPI, todas ellas de libre distribución e instalación. FFTW es una librería, o conjunto de librerías, con códigos para la realización de transformadas de Fourier en espacio discreto, como la transformada rápida de Fourier (FFT), cuyo uso se explicó en la Sección \ref{sub:gadget}. GSL (\textit{GNU Scientific Library}) como su nombre lo dice es una librería con un gran conjunto de funciones de uso científico. Finalmente, MPI (\textit{Message Passing Interface}) es la librería de instrucciones, rutinas y métodos para la paralelización de procesos en múltiples procesadores. 
@@ -30,7 +31,7 @@ Los datos más importantes para tener en cuenta con el archivo de parámetros de
 		\caption{$\sigma_8=0.7$}
 		\label{fig:sig7}
 	\end{subfigure}
-	\caption{Dos simulaciones de $128^3$ partículas con iguales condiciones a excepción de $\sigma_8$. También se aprecian las condiciones periódicas de la simulación.}
+	\caption[Dos simulaciones de $128^3$ partículas con iguales condiciones a excepción de $\sigma_8$.]{Dos simulaciones de $128^3$ partículas con iguales condiciones a excepción de $\sigma_8$. También se aprecian las condiciones periódicas de la simulación.}
 	\label{fig:sigma}
 \end{figure}
 
@@ -69,9 +70,12 @@ El migrar de clúster implicó reinstalar las librerías necesarias para la simu
 \end{table}
 
 \section{Códigos de Análisis}
-
+Una vez realizadas las simulaciones, es necesario crear códigos y programas que permitan la extracción de la información necesaria para los propósitos del proyecto. En la siguiente sección se describen brevemente los códigos creados para dicho propósito. Los algoritmos de análisis siguieron dos ramificaciones principales: el análisis por densidades y el análisis por halos. Para el segundo se tiene un proceso de búsqueda y clasificación de halos para un posterior análisis transversal de las simulaciones. Los lenguajes de programación usados fueron principalmente C para la extracción de información y análisis de la misma y Python (más exactamente la utilidad de IPython notebook) para la generación de gráficas.
 \subsection{Estructura del \textit{Snapshot}}
 \label{sub:snap}
+Los snapshots de Gadget-2 están escritos en binario, lo cual permite una velocidad de escritura mayor y a su vez un menor consumo de memoria física. Para la lectura de los snapshots se utilizó el código \textit{read\underline{\hspace{.1in}}snapshot.c} el cuál se encuentra en la carpeta de Analysis de la instalación de Gadget-2. Este código permite la lectura el snapshot y la extracción de las posiciones y velocidades de cada partícula en cada eje, de manera que los posteriores códigos tengan acceso a dicha información para su análisis. 
+
+El snapshot inicia con un encabezado en el cual indica la cantidad de partículas que hay en cada tipo de los 6 cuerpos manejados por Gadget-2, estos son: gas, halo, disco, \textit{bulge}, estrella y frontera. Los siguientes 6 datos en el encabezado indican la masa asignada a cada tipo de cuerpo, la cual varía debido a que se busca una densidad homogénea y se varía el número de partículas y el tamaño de la caja. Los datos de masa en el snapshot están dados en unidades de $10^{10}M_{\odot}$. A continuación se listan ciertos parámetros del estado de simulación, como lo son el tiempo, el redshift, el tamaño de la caja y los parámetros cosmológicos. Una vez terminado el encabezado, comienza el listado de partículas primero indicando la posición en tres coordenadas de cada una, en unidades de kiloparsec. Una vez se termina el listado de posiciones, inicia el listado de velocidades en tres dimensiones, en $km/s$. Finalmente, se realiza un nuevo listado con el número de identificación ID de cada partícula. El código también permite realizar una conversión de unidades de energía y una reorganización de partículas de acuerdo a si número de identificación.
 
 \subsection{Extracción de Halos}
 
