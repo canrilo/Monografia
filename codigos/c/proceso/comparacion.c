@@ -98,21 +98,21 @@ void main(int argc, char **argv){
 		for(j=0;j<numPartC;j++){
 			if(Gc[j]==i+1){
 				num=Ga[j];
-				if(num>0){
+				if(num!=0){
 					CorrA[Ga[j]-1]++;
-				}else{
-					CorrA[Ga[j]]++;
+					conteo++;
 				}
-				conteo++;
 				if(CorrA[Ga[j]-1]>mayor){
 					mayor=CorrA[Ga[j]-1];
 					indmay=Ga[j]-1;
 				}
 			}
 		}
-		CorrC[i]=indmay;
-		if(mayor<0.5*conteo){
-			printf("El halo %d tiene %d partículas y la mayor correspondencia es con %d con %d partículas\n",i+1,conteo,indmay+1,mayor);
+		if(mayor>0.4*conteo){
+			CorrC[i]=indmay;
+		}else{
+			//printf("El halo %d tiene %d partículas y la mayor correspondencia es con %d con %d partículas\n",i+1,conteo,indmay+1,mayor);
+			CorrC[i]=-1;
 		}
 	}
 	//free(CorrA);
@@ -187,10 +187,12 @@ void main(int argc, char **argv){
 		exit(1);
 	}
 	for(i=0;i<numHalosC;i++){
-		deltar=sqrt(pow(Centro[i].posCM[0]-Act[CorrC[i]].posCM[0],2)+pow(Centro[i].posCM[1]-Act[CorrC[i]].posCM[1],2)+pow(Centro[i].posCM[2]-Act[CorrC[i]].posCM[2],2));
-		deltav=sqrt(pow(Centro[i].velCM[0]-Act[CorrC[i]].velCM[0],2)+pow(Centro[i].velCM[1]-Act[CorrC[i]].velCM[1],2)+pow(Centro[i].velCM[2]-Act[CorrC[i]].velCM[2],2));
-		deltam=fabsf(Centro[i].masa-Act[i].masa);
-		fprintf(out,"%f %f %f %f %f\n",Centro[i].masa,deltar,deltav,deltam,densC[i]);
+		if(CorrC[i]!=-1){
+			deltar=sqrt(pow(Centro[i].posCM[0]-Act[CorrC[i]].posCM[0],2)+pow(Centro[i].posCM[1]-Act[CorrC[i]].posCM[1],2)+pow(Centro[i].posCM[2]-Act[CorrC[i]].posCM[2],2));
+			deltav=sqrt(pow(Centro[i].velCM[0]-Act[CorrC[i]].velCM[0],2)+pow(Centro[i].velCM[1]-Act[CorrC[i]].velCM[1],2)+pow(Centro[i].velCM[2]-Act[CorrC[i]].velCM[2],2));
+			deltam=fabsf(Centro[i].masa-Act[i].masa);
+			fprintf(out,"%f %f %f %f %f\n",Centro[i].masa,deltar,deltav,deltam,densC[i]);
+		}
 	}
 	fclose(out);
 	
