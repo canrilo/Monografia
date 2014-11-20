@@ -6,18 +6,19 @@
 
 char nombregrupos[10]="fof.grp";
 char directorio[100]="../../outcentro/datos/fof.grp";
-int *Ga, *Gc, numPartA, numPartC, numHalosA=0, numHalosC=0, *CorrA, *CorrC;
+char base[40]="halos_";
+int *Ga, *Gc, numPartA, numPartC, numHalosA=0, numHalosC=0, *CorrA, *CorrC,na,nc;
 struct halo{
-	int num;
+	float masa;
 	float posCM[3];
 	float velCM[3];
 }*Centro,*Act;
 
-
 void main(int argc, char **argv){
-	FILE *ina, *inc;
+	FILE *ina, *inc, *inha, *inhc, *out, *indeC, *indeA;
 	int i, basura, j, conteo, mayor, indmay;
-	char actual[10]="";
+	char actual[10]="", exportar[50]="centro_a_";
+	float deltar, deltav, deltam,rho, l=0.0, *densC, *densA;;
 	
 	if(argc!=2){
 		printf("Debe especificar si se está corriendo desde el directorio mas o menos\n");
@@ -78,6 +79,7 @@ void main(int argc, char **argv){
 	}
 	
 	/*Se llena el vector de correspondencias*/
+	printf("Realizando correspondencias\n");
 	for(i=0;i<numHalosC;i++){
 		/*Se pone en ceros el vector secundario*/
 		for(j=0;j<numHalosA;j++){
@@ -104,8 +106,75 @@ void main(int argc, char **argv){
 	free(CorrA);
 	free(Ga);
 	free(Gc);
+	printf("Correspondencias listas\n");
+	/*Se separa memoria para la información de los halo y se importan sus halos*/
 	
-	/*Se importan los datos de los halos*/
+	if(!(Centro=malloc(numHalosC*sizeof(struct halo)))){
+		printf("Hubo un problema en la asignación de memoria en H\n");
+		exit(1);
+	}
+	if(!(Act=malloc(numHalosA*sizeof(struct halo)))){
+		printf("Hubo un problema en la asignación de memoria en H\n");
+		exit(1);
+	}
 	
-		
+	if(!(inhc=fopen("../../outcentro/datos/halos_centro","r"))){
+		printf("Hubo un problema abriendo el archivo %s","halos_centro");
+		exit(1);
+	}
+	printf("Importando información de halos\n");
+	fscanf(inhc,"%d\n",&nc);
+	if(nc!=numHalosC){
+		printf("El número de halos centro no coincide\n");
+		exit(1);
+	}
+	for(i=0;i<numHalosC;i++){
+		fscanf(inhc, "%f %f %f %f %f %f %f\n",&Centro[i].masa,&Centro[i].posCM[0],&Centro[i].posCM[1],&Centro[i].posCM[2],&Centro[i].velCM[0],&Centro[i].velCM[1],&Centro[i].velCM[2]);
+	}
+	fclose(inhc);
+	
+	strcpy(base, actual);
+	if(!(inha=fopen(base,"r"))){
+		printf("Hubo un problema abriendo el archivo %s",base);
+		exit(1);
+	}
+	fscanf(inha,"%d\n",&na);
+	if(na!=numHalosA){
+		printf("El número de halos centro no coincide\n");
+		exit(1);
+	}
+	for(i=0;i<numHalosA;i++){
+		fscanf(inha, "%f %f %f %f %f %f %f\n",&Act[i].masa,&Act[i].posCM[0],&Act[i].posCM[1],&Act[i].posCM[2],&Act[i].velCM[0],&Act[i].velCM[1],&Act[i].velCM[2]);
+	}
+	fclose(inha);
+	printf("Información de Halos importada\n");
+	/*Se procede a asignar memoria e importar los archivos de densidades*/
+	if(!(densC=malloc(pow(500,3)*sizeof(float)))){
+		printf("Hubo un problema en la asignación de memoria en densC\n");
+		exit(1);
+	}
+	if(!(indeC=fopen("../../outcentro/datos/densidades_centro","r"))){
+		printf("Hubo un problema abriendo el archivo %s","../../outcentro/datos/densidades_centro");
+		exit(1);
+	}
+	fscanf(indeC,"%f\n",&l);
+	for(j=0;j<pow(500,3);j++){
+		fscanf(indeC,"%f\n", &densC[j]);
+	}
+	fclose(indeC);
+	printf("Se comenzará a exportar el archivo comparativo\n");
+	printf("El formato es Masa de referencia, Delta pos, Delta Vel, Delta M\n");
+	strcpy(exportar,actual);
+	if(!(out=fopen(exportar,"r"))){
+		printf("Hubo un problema abriendo el archivo %s",exportar);
+		exit(1);
+	}
+	for(i=0;i<numHalosC;i++){
+		deltar=sqrt(pow(Centro[i].posCM[0]-Act[CorrC[i]].posCM[0],2)+pow(Centro[i].posCM[1]-Act[CorrC[i]].posCM[1],2)+pow(Centro[i].posCM[2]-Act[CorrC[i]].posCM[2],2));
+		deltav=sqrt(pow(Centro[i].velCM[0]-Act[CorrC[i]].velCM[0],2)+pow(Centro[i].velCM[1]-Act[CorrC[i]].velCM[1],2)+pow(Centro[i].velCM[2]-Act[CorrC[i]].velCM[2],2));
+		deltam=fabsf(Centro[i].masa-Act[i].masa);
+		fprintf(out,"%f %f %f %f %f\n",Centro[i].masa,deltar,deltav,deltam,densC[i]);
+	}
+	fclose(out);
+	
 }

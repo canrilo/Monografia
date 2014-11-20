@@ -516,7 +516,7 @@ void add_dens(int x, int y, int z, float peso, int div){
 	x=(x+div)%div;
 	y=(y+div)%div;
 	z=(z+div)%div;
-	densidades[(int)pow(div,2)*x+(int)div*y+z]+=peso*header1.mass[1];
+	densidades[(int)pow(div,2)*x+(int)div*y+z]+=peso;
 	
 }
 
@@ -542,7 +542,7 @@ void escribir_densidades(char nom_dens[], int div){
 	
 	fprintf(Fdens,"%f\n",l);
 	for(ind=0;ind<pow(div,3);ind++){
-		fprintf(Fdens,"%f\n",densidades[ind]);
+		fprintf(Fdens,"%f\n",densidades[ind]*pow(div,3)/NumPart-1.0);
 	}
 	printf("Density file written\n");
 }
