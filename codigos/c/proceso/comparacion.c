@@ -5,8 +5,10 @@
 #include <unistd.h>
 
 char nombregrupos[10]="fof.grp";
-char directorio[100]="../../outcentro/datos/fof.grp";
+char directorio[100]="/netapp_quest_home/forero/outcentro/datos/fof.grp";
 char base[40]="halos_";
+char total_centro[100]="/netapp_quest_home/forero/outcentro/datos/";
+char total_actual[100]="/netapp_quest_home/forero/out";
 int *Ga, *Gc, numPartA, numPartC, numHalosA=0, numHalosC=0, *CorrA, *CorrC,na,nc, num;
 struct halo{
 	float masa;
@@ -18,17 +20,21 @@ void main(int argc, char **argv){
 	FILE *ina, *inc, *inha, *inhc, *out, *indeC, *indeA;
 	int i, basura, j, conteo, mayor, indmay;
 	char actual[10]="", exportar[50]="centro_a_";
-	float deltar, deltav, deltam,rho, l=0.0, *densC, *densA;;
+	char total_grupoact[100]="", total_halocen[100]="", total_haloact[100]="", exp_act[100]="";
+	float deltar, deltav, deltam,rho, l=0.0, *densC, *densA;
 	
 	if(argc!=2){
 		printf("Debe especificar si se está corriendo desde el directorio mas o menos\n");
 		exit(1);
 	}
 	strcpy(actual,argv[1]);
-	
+	strcat(total_actual,actual);
+	strcat(total_actual,"/datos/");
 	
 	/*Se abre el archivo con la lista de grupos*/
-	if(!(ina=fopen(nombregrupos,"r"))){
+	strcat(total_grupoact,total_actual);
+	strcat(total_grupoact,nombregrupos);
+	if(!(ina=fopen(total_grupoact,"r"))){
 		printf("Hubo un problema abriendo el archivo %s\n",nombregrupos);
 		exit(1);
 	}
@@ -123,8 +129,9 @@ void main(int argc, char **argv){
 		printf("Hubo un problema en la asignación de memoria en H\n");
 		exit(1);
 	}
-	
-	if(!(inhc=fopen("../../outcentro/datos/halos_centro","r"))){
+	strcat(total_halocen,total_centro);
+	strcat(total_halocen,"halos_centro");
+	if(!(inhc=fopen(total_halocen,"r"))){
 		printf("Hubo un problema abriendo el archivo %s\n","halos_centro");
 		exit(1);
 	}
@@ -140,7 +147,9 @@ void main(int argc, char **argv){
 	fclose(inhc);
 	
 	strcat(base, actual);
-	if(!(inha=fopen(base,"r"))){
+	strcat(total_haloact,total_actual);
+	strcat(total_haloact,base);
+	if(!(inha=fopen(total_haloact,"r"))){
 		printf("Hubo un problema abriendo el archivo %s\n",base);
 		exit(1);
 	}
@@ -159,7 +168,7 @@ void main(int argc, char **argv){
 		printf("Hubo un problema en la asignación de memoria en densC\n");
 		exit(1);
 	}
-	if(!(indeC=fopen("../../outcentro/datos/densidades_centro","r"))){
+	if(!(indeC=fopen("/netapp_quest_home/forero/outcentro/datos/densidades_centro","r"))){
 		printf("Hubo un problema abriendo el archivo %s\n","../../outcentro/datos/densidades_centro");
 		exit(1);
 	}
@@ -171,7 +180,9 @@ void main(int argc, char **argv){
 	printf("Se comenzará a exportar el archivo comparativo\n");
 	printf("El formato es Masa de referencia, Delta pos, Delta Vel, Delta M\n");
 	strcat(exportar,actual);
-	if(!(out=fopen(exportar,"r"))){
+	strcat(exp_act,total_actual);
+	strcat(exp_act,exportar);
+	if(!(out=fopen(exp_act,"w"))){
 		printf("Hubo un problema abriendo el archivo %s\n",exportar);
 		exit(1);
 	}
