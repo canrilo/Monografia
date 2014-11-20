@@ -7,7 +7,7 @@
 char nombregrupos[10]="fof.grp";
 char directorio[100]="../../outcentro/datos/fof.grp";
 char base[40]="halos_";
-int *Ga, *Gc, numPartA, numPartC, numHalosA=0, numHalosC=0, *CorrA, *CorrC,na,nc;
+int *Ga, *Gc, numPartA, numPartC, numHalosA=0, numHalosC=0, *CorrA, *CorrC,na,nc, num;
 struct halo{
 	float masa;
 	float posCM[3];
@@ -26,9 +26,10 @@ void main(int argc, char **argv){
 	}
 	strcpy(actual,argv[1]);
 	
+	
 	/*Se abre el archivo con la lista de grupos*/
 	if(!(ina=fopen(nombregrupos,"r"))){
-		printf("Hubo un problema abriendo el archivo %s",nombregrupos);
+		printf("Hubo un problema abriendo el archivo %s\n",nombregrupos);
 		exit(1);
 	}
 	fscanf(ina,"%d\n",&numPartA);
@@ -49,7 +50,7 @@ void main(int argc, char **argv){
 	
 	/*Se abre el archivo con la lista de grupos*/
 	if(!(inc=fopen(directorio,"r"))){
-		printf("Hubo un problema abriendo el archivo %s",directorio);
+		printf("Hubo un problema abriendo el archivo %s\n",directorio);
 		exit(1);
 	}
 	fscanf(inc,"%d\n",&numPartC);
@@ -90,7 +91,12 @@ void main(int argc, char **argv){
 		conteo=0;
 		for(j=0;j<numPartC;j++){
 			if(Gc[j]==i+1){
-				CorrA[Ga[j]-1]++;
+				num=Ga[j];
+				if(num>0){
+					CorrA[Ga[j]-1]++;
+				}else{
+					CorrA[Ga[j]]++;
+				}
 				conteo++;
 				if(CorrA[Ga[j]-1]>mayor){
 					mayor=CorrA[Ga[j]-1];
@@ -103,9 +109,9 @@ void main(int argc, char **argv){
 			printf("El halo %d tiene %d partículas y la mayor correspondencia es con %d con %d partículas\n",i+1,conteo,indmay+1,mayor);
 		}
 	}
-	free(CorrA);
-	free(Ga);
-	free(Gc);
+	//free(CorrA);
+	//free(Ga);
+	//free(Gc);
 	printf("Correspondencias listas\n");
 	/*Se separa memoria para la información de los halo y se importan sus halos*/
 	
@@ -119,7 +125,7 @@ void main(int argc, char **argv){
 	}
 	
 	if(!(inhc=fopen("../../outcentro/datos/halos_centro","r"))){
-		printf("Hubo un problema abriendo el archivo %s","halos_centro");
+		printf("Hubo un problema abriendo el archivo %s\n","halos_centro");
 		exit(1);
 	}
 	printf("Importando información de halos\n");
@@ -133,9 +139,9 @@ void main(int argc, char **argv){
 	}
 	fclose(inhc);
 	
-	strcpy(base, actual);
+	strcat(base, actual);
 	if(!(inha=fopen(base,"r"))){
-		printf("Hubo un problema abriendo el archivo %s",base);
+		printf("Hubo un problema abriendo el archivo %s\n",base);
 		exit(1);
 	}
 	fscanf(inha,"%d\n",&na);
@@ -154,7 +160,7 @@ void main(int argc, char **argv){
 		exit(1);
 	}
 	if(!(indeC=fopen("../../outcentro/datos/densidades_centro","r"))){
-		printf("Hubo un problema abriendo el archivo %s","../../outcentro/datos/densidades_centro");
+		printf("Hubo un problema abriendo el archivo %s\n","../../outcentro/datos/densidades_centro");
 		exit(1);
 	}
 	fscanf(indeC,"%f\n",&l);
@@ -164,9 +170,9 @@ void main(int argc, char **argv){
 	fclose(indeC);
 	printf("Se comenzará a exportar el archivo comparativo\n");
 	printf("El formato es Masa de referencia, Delta pos, Delta Vel, Delta M\n");
-	strcpy(exportar,actual);
+	strcat(exportar,actual);
 	if(!(out=fopen(exportar,"r"))){
-		printf("Hubo un problema abriendo el archivo %s",exportar);
+		printf("Hubo un problema abriendo el archivo %s\n",exportar);
 		exit(1);
 	}
 	for(i=0;i<numHalosC;i++){

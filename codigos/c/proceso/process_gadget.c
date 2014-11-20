@@ -410,7 +410,7 @@ void datos_halo(int ind){
  * de los halos encontrados*/
 void centros(char *archivo){
 	FILE *in, *out;
-	int i, basura;
+	int i, basura, ind, elnum;
 	//char archivo[20] = "datos_halos.data";
 		
 	/*Se abre el archivo con la lista de grupos*/
@@ -444,9 +444,38 @@ void centros(char *archivo){
 	
 	/*Se procede a hallar centro de masa y velocidad de cada grupo*/
 	printf("Calculating centers of mass and velocities\n");
-	for(i=1;i<=max;i++){
-		datos_halo(i);
+	for(ind=1;ind<=max;ind++){
+		H[ind].posCM[0]=0;
+		H[ind].posCM[1]=0;
+		H[ind].posCM[2]=0;
+		H[ind].velCM[0]=0;
+		H[ind].velCM[1]=0;
+		H[ind].velCM[2]=0;
+		H[ind].num=0;
 	}
+	
+	for(i=1;i<=NumPart;i++){
+		ind=G[i];
+		if(ind>0){
+			H[ind].posCM[0]+=P[ind].Pos[0];
+			H[ind].posCM[1]+=P[ind].Pos[1];
+			H[ind].posCM[2]+=P[ind].Pos[2];
+			H[ind].velCM[0]+=P[ind].Vel[0];
+			H[ind].velCM[1]+=P[ind].Vel[1];
+			H[ind].velCM[2]+=P[ind].Vel[2];
+			H[ind].num++;
+		}
+	}
+	for(ind=1;ind<=max;ind++){
+		elnum=H[ind].num;
+		H[ind].posCM[0]/=elnum;
+		H[ind].posCM[1]/=elnum;
+		H[ind].posCM[2]/=elnum;
+		H[ind].velCM[0]/=elnum;
+		H[ind].velCM[1]/=elnum;
+		H[ind].velCM[2]/=elnum;
+	}
+	
 	
 	/*Se exportan los datos de los halos*/
 	printf("Writing Halo data file\n");
