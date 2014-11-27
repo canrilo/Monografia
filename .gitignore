@@ -16,7 +16,7 @@ Docs/LaTex/Documento Final.out
 Docs/LaTex/Documento Final.synctex.gz
 Docs/LaTex/Documento Final.toc
 Docs/LaTex/MarcoTeorico/marcoTeorico.log
-"Docs/LaTex/Tesis Camilo Andr\303\251s Rivera.pdf"
+Docs/LaTex/Tesis Camilo Andrés Rivera.pdf
 Docs/LaTex/edmund bib
 Docs/LaTex/introduccion/introduccion.log
 Docs/LaTex/references.bib~
@@ -125,4 +125,6 @@ prueba.x
 prueba.x~
 untitled
 untitled2
+.gitignore~
+
 
