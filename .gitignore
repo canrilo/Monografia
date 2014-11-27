@@ -1,0 +1,128 @@
+20 oct
+23 oct
+6 oct
+Docs/1208.5931v2.pdf
+Docs/1302.5167v1.pdf
+Docs/Jaa285.pdf
+Docs/LaTex/Ap_ResumenEjecutivo/
+Docs/LaTex/Documento Final.aux
+Docs/LaTex/Documento Final.bbl
+Docs/LaTex/Documento Final.blg
+Docs/LaTex/Documento Final.brf
+Docs/LaTex/Documento Final.lof
+Docs/LaTex/Documento Final.log
+Docs/LaTex/Documento Final.lot
+Docs/LaTex/Documento Final.out
+Docs/LaTex/Documento Final.synctex.gz
+Docs/LaTex/Documento Final.toc
+Docs/LaTex/MarcoTeorico/marcoTeorico.log
+"Docs/LaTex/Tesis Camilo Andr\303\251s Rivera.pdf"
+Docs/LaTex/edmund bib
+Docs/LaTex/introduccion/introduccion.log
+Docs/LaTex/references.bib~
+Docs/Sustentacion/Presentacion_final.aux
+Docs/Sustentacion/Presentacion_final.bbl
+Docs/Sustentacion/Presentacion_final.blg
+Docs/Sustentacion/Presentacion_final.log
+Docs/Sustentacion/Presentacion_final.nav
+Docs/Sustentacion/Presentacion_final.out
+Docs/Sustentacion/Presentacion_final.snm
+Docs/Sustentacion/Presentacion_final.synctex.gz
+Docs/Sustentacion/Presentacion_final.toc
+Docs/Sustentacion/Presentacion_final.vrb
+Docs/Sustentacion/references.bib
+Docs/snapshot.pdf
+Ejecutables/
+GADGET-2_Best_Practices.pdf
+Librerias/
+Pruebas/1/
+Pruebas/2/
+Pruebas/3/Caracteristicas~
+Pruebas/3/ICs/
+Pruebas/3/film/
+Pruebas/3/ics.param
+Pruebas/3/lcdm.param
+Pruebas/3/lcdm.param-usedvalues
+Pruebas/3/nohup.out
+Pruebas/3/nohuperror
+Pruebas/3/nohuperror2
+Pruebas/3/out/cpu.txt
+Pruebas/3/out/energy.txt
+Pruebas/3/out/info.txt
+Pruebas/3/out/parameters-usedvalues
+Pruebas/3/out/timings.txt
+Pruebas/4/errornohup
+Pruebas/4/errornohup2
+Pruebas/4/lcdm.param-usedvalues
+Pruebas/4/nohup.out
+Pruebas/4/out/Untitled Folder/film.gmv
+Pruebas/4/out/Untitled Folder/filmparam.py
+Pruebas/4/out/cpu.txt
+Pruebas/4/out/energy.txt
+Pruebas/4/out/info.txt
+Pruebas/4/out/timings.txt
+Pruebas/comparacion/
+Pruebas/def512centro/densidades_centro
+Pruebas/def512centro/fof.grp
+Pruebas/def512mas/.ipynb_checkpoints/
+Pruebas/def512mas/deltammas.png
+Pruebas/def512mas/deltavmas.png
+Pruebas/def512mas/densidades_mas
+Pruebas/def512mas/fof.grp
+Pruebas/def512mas/logm-deltam-mas.png
+Pruebas/def512mas/logm-deltap-mas.png
+Pruebas/def512mas/logm-deltav-mas.png
+Pruebas/def512mas/prueba.png
+Pruebas/def512menos/.ipynb_checkpoints/
+Pruebas/def512menos/deltammenos.png
+Pruebas/def512menos/deltavmenos.png
+Pruebas/def512menos/densidades_menos
+Pruebas/def512menos/fof.grp
+Pruebas/def512menos/logm-deltam-menos.png
+Pruebas/def512menos/logm-deltap-menos.png
+Pruebas/def512menos/logm-deltav-menos.png
+README.md~
+TODO
+codigos/c/bin.x
+codigos/c/cic.x
+codigos/c/cloud_in_cell.c
+codigos/c/ffpr.x
+codigos/c/fftprueba.c
+codigos/c/fof/
+codigos/c/meh.c
+codigos/c/meh.x
+codigos/c/p2.c
+codigos/c/p2.x
+codigos/c/proceso/.ipynb_checkpoints/
+codigos/c/proceso/comp.x
+codigos/c/proceso/comparacionmitad.c
+codigos/c/proceso/comparacionopt.c
+codigos/c/proceso/datos_halos.data
+codigos/c/proceso/densi_pru
+codigos/c/proceso/fof.grp
+codigos/c/proceso/fof_data_snp.dat
+codigos/c/proceso/halopru
+codigos/c/proceso/proceso.x
+codigos/c/proceso/procesop.x
+codigos/c/proceso/process.x
+codigos/c/proceso/pru.x
+codigos/c/proceso/pruebas_densidades.dat
+codigos/c/proceso/prupro.c
+codigos/c/proceso/snapshot_050
+codigos/c/proceso/viejo_Graficas.ipynb
+codigos/c/prueba.ss
+codigos/c/pruebas.c
+codigos/c/read.x
+codigos/c/read_binary.c
+codigos/c/read_snapshot.c
+codigos/c/rmasa.x
+codigos/c/uh.c
+codigos/crear_dummy.py
+codigos/ipy/
+codigos/snapshot_011
+codigos/snapshot_050
+prueba.x
+prueba.x~
+untitled
+untitled2
+
