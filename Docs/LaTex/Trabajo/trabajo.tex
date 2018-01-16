@@ -3,14 +3,14 @@
 El trabajo realizado a lo largo del semestre se puede dividir en dos secciones principales: la realización de simulaciones y la escritura de códigos de análisis y comparación para dichas simulaciones. Para el primer caso implica la lectura de cómo correr las simulaciones en clusters de múltiples procesadores, definir los parámetros de instalación y de simulación en sí y observar los comportamientos, tiempos de duración y modos de exportación de datos de cada simulación. Para la segunda sección se incluyen los códigos realizados y utilizados que permiten desde la lectura de los datos brutos de simulación hasta la extracción de propiedades y generación de gráficas de análisis. A continuación se explicarán las diferentes secciones y detalles del trabajo realizado, así como los resultados de dicho trabajo.
 
 \section{Características de Simulación}
-Los datos manejados a lo largo del proyecto son $100\%$ provenientes de simulaciones computacionales, de manera que la correcta planeación, manejo y ejecición de dichas simulaciones es vital para los resultados. A continuación se describen las características de la instalación y ejecución de las simulaciones realizadas.
+Los datos manejados a lo largo del proyecto son $100\%$ provenientes de simulaciones computacionales, de manera que la correcta planeación, manejo y ejecución de dichas simulaciones es vital para los resultados. A continuación se describen las características de la instalación y ejecución de las simulaciones realizadas.
 
 \subsection{Parámetros de instalación y compilación}
 Para correr una simulación en Gadget-2 se requiere principalmente de 3 librerías previamente instaladas y de un set de condiciones iniciales sobre las cuales trabajar. Las tres librerías que se deben instalar son FFTW, GSL y MPI, todas ellas de libre distribución e instalación. FFTW es una librería, o conjunto de librerías, con códigos para la realización de transformadas de Fourier en espacio discreto, como la transformada rápida de Fourier (FFT), cuyo uso se explicó en la Sección \ref{sub:gadget}. GSL (\textit{GNU Scientific Library}) como su nombre lo dice es una librería con un gran conjunto de funciones de uso científico. Finalmente, MPI (\textit{Message Passing Interface}) es la librería de instrucciones, rutinas y métodos para la paralelización de procesos en múltiples procesadores. 
 
 Una vez instaladas las librerías se procede a compilar los ejecutables, para lo cual es necesario configurar el MakeFile. En éste se comentan las características y utilidades que no se requieren usar de Gadget-2, así como se activan las que sí. Para el caso del proyecto, los puntos más importantes del MakeFile son activar las condiciones de frontera periódicas, activar el mallado PM (para el algoritmo TreePM explicado en la Sección \ref{sub:gadget}), el uso de Peano-Hilbert para la paralelización y desactivar el uso de librería HDF5, la cual no fue instalada. Finalmente, se indica las ubicaciones de las librerías previamente instaladas, lo cual cambia dependiendo de la arquitectura del sistema y se procede a compilar para generar el ejecutable de la simulación. Este proceso es idéntico para Gadget-2 y para N-GenIC, que es el código utilizado para el tercer requerimiento: las condiciones iniciales. N-GenIC es un código de generación de condiciones iniciales que a partir de un archivo \textit{glass} de partículas homogéneamente distribuidas en un mallado genera un archivo del tipo snapshot de Gadget-2 con una distribución de masas y velocidades homogénea. El archivo \textit{glass} utilizado tenía un total de $16^3$ partículas de manera que de acuerdo a los requerimientos de la simulación (número total de partículas) se puede apilar una cierta cantidad de archivos en cada eje, o crear uno de mayor tamaño.
 
-Como se explicará más a fondo en la Sección \ref{sub:simulaciones}, las simulaciones fueron realizadas no sólo en computadores personales sino que también se hizo uso del clúster de física de la Universidad de los Andes y además se corrieron las simulaciones definiticas en el clúster KIAS en Corea, para lo cual fue necesario la conexión y ejecución de comandos remotos mediante la terminal de Ubuntu. Mediante el comando \textit{ssh}, con un usuario y una clave, se establece una conexión remota con el clúster o máquina en cuestión que permite correr cualquier comando o script. En el caso de la ejecución de las simulaciones es importante tener en cuenta la arquitectura y manejo que tenga cada clúster, puesto que en un clúster de bajo uso como lo era el Fiscluster se podía ejecutar directamente el script de la simulación en los nodos que estuviesen desocupados, siempre y cuando los resultados de simulación quedasen dentro de las limitaciones de espacio de disco duro y computación. En cambio, para un cluster de mayor nivel de organización e infraestructura como lo es KIAS, hay que cumplir con una serie de recursos máximos permitidos y además el script no puede ser ejecutado directamente, sino que debe contener la información de la cantidad de nodos y procesadores requeridos y correr el comando \textit{qsub} con el scrip. Este comando añade el script a un sistema de colas, para el cual el administrador de colas, en base a los requerimientos descritos para el script, asigna los procesadores en los que correrá el proceso. Esta organización permite una mejor distribución de los recursos, evitando la sobrecarga de algún nodo. El estado del proceso puede ser seguido mediante el comando \textit{qstat} el cual muestra los procesos corriendo por el usuario actual y con el comando \textit{qhost} que muestra el estado actual de uso de los recursos del clúster, como la carga de los nodos y la memoria usada. 
+Como se explicará más a fondo en la Sección \ref{sub:simulaciones}, las simulaciones fueron realizadas no sólo en computadores personales sino que también se hizo uso del clúster de física de la Universidad de los Andes y además se corrieron las simulaciones definitivas en el clúster KIAS en Corea, para lo cual fue necesario la conexión y ejecución de comandos remotos mediante la terminal de Ubuntu. Mediante el comando \textit{ssh}, con un usuario y una clave, se establece una conexión remota con el clúster o máquina en cuestión que permite correr cualquier comando o script. En el caso de la ejecución de las simulaciones es importante tener en cuenta la arquitectura y manejo que tenga cada clúster, puesto que en un clúster de bajo uso como lo era el Fiscluster se podía ejecutar directamente el script de la simulación en los nodos que estuviesen desocupados, siempre y cuando los resultados de simulación quedasen dentro de las limitaciones de espacio de disco duro y computación. En cambio, para un clúster de mayor nivel de organización e infraestructura como lo es KIAS, hay que cumplir con una serie de recursos máximos permitidos y además el script no puede ser ejecutado directamente, sino que debe contener la información de la cantidad de nodos y procesadores requeridos y correr el comando \textit{qsub} con el script. Este comando añade el script a un sistema de colas, para el cual el administrador de colas, en base a los requerimientos descritos para el script, asigna los procesadores en los que correrá el proceso. Esta organización permite una mejor distribución de los recursos, evitando la sobrecarga de algún nodo. El estado del proceso puede ser seguido mediante el comando \textit{qstat} el cual muestra los procesos corriendo por el usuario actual y con el comando \textit{qhost} que muestra el estado actual de uso de los recursos del clúster, como la carga de los nodos y la memoria usada. 
 
 Dado que en el clúster no se hacía uso de las colas de trabajo y los scripts se corrían directamente desde la consola, en el caso de haber una desconexión del computador y romper el acceso remoto, las simulaciones se detenían. Para corregir este problema se hizo uso del comando \textit{nohup} el cual permitía que el código se siguiese ejecutando sin necesidad de la conexión permanente por consola, así todos los outputs que normalmente aparecerían en la consola se guardaban en un archivo de texto.
 
@@ -106,7 +106,7 @@ Para los datos exportados de cada simulación se realizó una identificación de
 \caption{Distribución de cambios en la velocidad para $\Omega-5\%$}
 \label{fig:deltavmenos}
 \end{figure}
-En las Figuras \ref{fig:deltavmas} y \ref{fig:deltavmenos}, se muestran las distribuciones normalizadas de las velocidades respecto al logaritmo de la masa en tres gráficas separadas por el rango de masas correspondientes. En estas gráficas se encontró un patrón inesperado y es que independientemente de la masa del halo, la distribución del cambio en velocidades es idéntica con un pico cercano a los $500km/s$. Este dato es el más relevante puesto que cualquier experimento que quiera tener suficiente precisión y resolución para discernir entre cambios de $5\%$ en $\Omega$ a través de redshifts, su método de medición de velocidades deberá ser capaz de discernir diferencias de velocidades en este orden.
+En las Figuras \ref{fig:deltavmenos} y \ref{fig:deltavmas}, se muestran las distribuciones normalizadas de las velocidades respecto al logaritmo de la masa en tres gráficas separadas por el rango de masas correspondientes. En estas gráficas se encontró un patrón inesperado y es que independientemente de la masa del halo, la distribución del cambio en velocidades es idéntica con un pico cercano a los $500km/s$. Este dato es el más relevante puesto que cualquier experimento que quiera tener suficiente precisión y resolución para discernir entre cambios de $5\%$ en $\Omega$ a través de redshifts, su método de medición de velocidades deberá ser capaz de discernir diferencias de velocidades en este orden.
 
 \begin{figure}[h]
 \centering
@@ -129,4 +129,39 @@ Para el caso de las Figuras \ref{fig:deltammas} y \ref{fig:deltammenos} se puede
 \includegraphics[width=0.6\textwidth]{Trabajo/deltammas}
 \caption{Distribución de cambios en la masa para $\Omega+5\%$}
 \label{fig:deltammas}
+\end{figure}
+
+
+
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.49\textwidth}
+		\includegraphics[width=\textwidth]{Trabajo/logm-deltam-mas}
+		\caption{Cambios en la masa para $\Omega+5\%$}
+		\label{fig:logmdeltammas}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.49\textwidth}
+		\includegraphics[width=\textwidth]{Trabajo/logm-deltam-menos}
+		\caption{Cambios en la masa para $\Omega-5\%$}
+		\label{fig:logmdeltammenos}
+	\end{subfigure}
+	\caption{Comparación de los cambios en la masa de los halos para los universos con $\Omega+5\%$ y $\Omega-5\%$}
+	\label{fig:logmdeltam}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.49\textwidth}
+		\includegraphics[width=\textwidth]{Trabajo/logm-deltav-mas}
+		\caption{Cambios en la velocidad para $\Omega+5\%$}
+		\label{fig:logmdeltavmas}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.49\textwidth}
+		\includegraphics[width=\textwidth]{Trabajo/logm-deltav-menos}
+		\caption{Cambios en la velocidad para $\Omega-5\%$}
+		\label{fig:logmdeltavmenos}
+	\end{subfigure}
+	\caption{Comparación de los cambios en la velocidad de los halos para los universos con $\Omega+5\%$ y $\Omega-5\%$}
+	\label{fig:logmdeltav}
 \end{figure}
